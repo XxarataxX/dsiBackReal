@@ -15,3 +15,8 @@ class ConditionSerializers(serializers.ModelSerializer):
         instance = Tarea(**attrs)
         instance.clean()
         return attrs
+    
+class TareaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tarea
+        fields = '__all__'
