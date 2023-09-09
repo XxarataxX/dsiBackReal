@@ -1,7 +1,23 @@
 from django.contrib.auth.models import User
 from django.db import models
 from datetime import date
+from django.contrib.auth.models import AbstractUser, Group, Permission
 # Create your models here.
+
+class Tecnico(AbstractUser):
+
+
+    #temporalmente no necesaria la foto
+    profilePicture = models.ImageField(upload_to='usuarios', null=True, blank=True)
+
+
+
+    groups = models.ManyToManyField(Group, related_name='visitor_groups')
+    user_permissions = models.ManyToManyField(Permission, related_name='visitor_user_permissions')
+
+    class Meta:
+        verbose_name_plural = 'Visitors'
+
 
 class Tarea(models.Model):
 
@@ -26,3 +42,4 @@ class Tarea(models.Model):
 
     def __str__(self):
         return self.titulo
+    

@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Tarea
+from .models import Tarea, Tecnico
+
 
 class MiModeloSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,3 +16,8 @@ class ConditionSerializers(serializers.ModelSerializer):
         instance = Tarea(**attrs)
         instance.clean()
         return attrs
+    
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tecnico
+        fields = '__all__'
