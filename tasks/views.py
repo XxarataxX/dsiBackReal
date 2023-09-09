@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework import generics
 from rest_framework.parsers import FileUploadParser, MultiPartParser
 from rest_framework.response import Response
@@ -13,6 +13,8 @@ from PIL import Image
 import io
 
 from django.core.files.base import ContentFile
+from .serializer import MiModeloSerializer, TareaSerializer
+from .models import Tarea
 
 # Create your views here.
 class ConditionListApiView(generics.ListAPIView):
@@ -40,12 +42,22 @@ class VisitorDetailCorreoClave(generics.RetrieveAPIView):
         return obj
     
 # Create your views here.
-class DetailTarea(generics.ListAPIView):
+class DetailTarea(generics.RetrieveAPIView):
 
-    serializer_class = MiModeloSerializer
+    queryset = Tarea.objects.all()
+    serializer_class = TareaSerializer
+    lookup_field = 'id'
+    
+    
+class ListTareaTecnico(generics.ListAPIView):
+
+    serializer_class = TareaSerializer
 
     def get_queryset(self):
-        return Tarea.objects.all()
+        tecnico_id = self.kwargs['tecnico_id']
+        
+        # Filtra las tareas donde el campo 'tecnico' sea igual al ID del técnico
+        return Tarea.objects.filter(tecnico=tecnico_id)
 
 class TareaUpdateView(generics.UpdateAPIView):
     queryset = Tarea.objects.all()
@@ -113,3 +125,5 @@ class TareaUpdateView(generics.UpdateAPIView):
         tarea.save()
         serializer = self.get_serializer(tarea)
         return Response(serializer.data, status=status.HTTP_200_OK)
+        # Obtén el ID del técnico desde la URL
+        

@@ -17,6 +17,11 @@ class ConditionSerializers(serializers.ModelSerializer):
         instance.clean()
         return attrs
     
+class TareaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tarea
+        fields = '__all__'
+    
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tecnico
