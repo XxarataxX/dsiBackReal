@@ -113,15 +113,24 @@ class TareaUpdateView(generics.UpdateAPIView):
 
         firma_base64 = request.data.get('firma_base64')
         firma_base64 = firma_base64 + "=="
+        print(firma_base64)
         if firma_base64:
             try:
-                # Decodifica la firma base64 y guárdala en el campo de firma
+                # Decodifica la firma base64
                 firma_data = base64.b64decode(firma_base64)
-                tarea.firma = ContentFile(firma_data, 'firma.png')
+
+                # Guarda la firma en formato SVG directamente
+                tarea.firma = ContentFile(firma_data, 'firma.svg')
             except Exception as e:
                 print(e)
                 return Response({'error': 'Error al procesar la firma base64.'}, status=status.HTTP_400_BAD_REQUEST)
 
+        correo = request.data.get('correo')
+        cliente = request.data.get('cliente')
+            
+        tarea.recibio = cliente
+        tarea.correo = correo
+        
         tarea.save()
         serializer = self.get_serializer(tarea)
         return Response(serializer.data, status=status.HTTP_200_OK)
