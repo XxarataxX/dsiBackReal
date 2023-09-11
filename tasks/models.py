@@ -32,12 +32,13 @@ class Tarea(models.Model):
     fecha_creacion = models.DateField(default=date.today)
     fecha_vencimiento = models.DateField()
     status = models.IntegerField(choices=opciones)
-    firma = models.TextField(blank=True)
+    firma = models.ImageField(upload_to='firmas', null=True, blank=True)
     recibio = models.CharField(max_length=50, blank=True)
     image_1 = models.ImageField(upload_to='completos', null=True, blank=True)
     image_2 = models.ImageField(upload_to='completos', null=True, blank=True)
     image_3 = models.ImageField(upload_to='completos', null=True, blank=True)
-    tecnico = models.ForeignKey(User, on_delete=models.CASCADE) 
+    tecnico = models.ForeignKey(Tecnico, on_delete=models.CASCADE) 
+    correo = models.CharField(max_length=50, default="")
 
 
     def __str__(self):
