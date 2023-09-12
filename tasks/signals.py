@@ -15,6 +15,7 @@ def generar_pdf(numero):
      # Genera el PDF utilizando ReportLab
     buffer = BytesIO()
     p = canvas.Canvas(buffer, pagesize=letter)
+    
     p.drawString(100, 750, "Factura Número: {}".format(numero))
    
     p.showPage()
