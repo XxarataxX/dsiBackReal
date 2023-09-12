@@ -130,7 +130,9 @@ class TareaUpdateView(generics.UpdateAPIView):
             
         tarea.recibio = cliente
         tarea.correo = correo
-        
+
+        tarea.status = 2
+
         tarea.save()
         serializer = self.get_serializer(tarea)
         return Response(serializer.data, status=status.HTTP_200_OK)
