@@ -41,9 +41,11 @@ class Tarea(models.Model):
     image_1 = models.ImageField(upload_to='completos', null=True, blank=True)
     image_2 = models.ImageField(upload_to='completos', null=True, blank=True)
     image_3 = models.ImageField(upload_to='completos', null=True, blank=True)
+    image_4 = models.ImageField(upload_to='completos', null=True, blank=True)
     tecnico = models.ForeignKey(Tecnico, on_delete=models.CASCADE) 
     correo = models.CharField(max_length=50, default="")
     fotos = models.ImageField(upload_to='fotos', null=True, blank=True)
+    notas = models.TextField(default=" ")
 
 
     def __str__(self):

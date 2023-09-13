@@ -101,7 +101,7 @@ class TareaUpdateView(generics.UpdateAPIView):
 
         
         
-        image_fields = ['image_1', 'image_2', 'image_3']
+        image_fields = ['image_1', 'image_2', 'image_3', 'image_4']
         for field_name in image_fields:
             image_base64 = request.data.get(f'{field_name}_base64')
             image_base64 = image_base64 + "=="
@@ -115,6 +115,7 @@ class TareaUpdateView(generics.UpdateAPIView):
 
         firma_base64 = request.data.get('firma_base64')
         firma_base64 = firma_base64 + "=="
+        print(firma_base64)
         if firma_base64:
             try:
                 # Decodifica la firma base64
@@ -137,9 +138,11 @@ class TareaUpdateView(generics.UpdateAPIView):
 
         correo = request.data.get('correo')
         cliente = request.data.get('cliente')
+        notas = request.data.get('notas')
             
         tarea.recibio = cliente
         tarea.correo = correo
+        tarea.notas = notas
 
         tarea.status = 2
 
