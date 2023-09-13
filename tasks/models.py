@@ -2,8 +2,12 @@ from django.contrib.auth.models import User
 from django.db import models
 from datetime import date
 from django.contrib.auth.models import AbstractUser, Group, Permission
-# Create your models here.
 
+
+
+# Create your models here.
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 class Tecnico(AbstractUser):
 
 
@@ -39,8 +43,17 @@ class Tarea(models.Model):
     image_3 = models.ImageField(upload_to='completos', null=True, blank=True)
     tecnico = models.ForeignKey(Tecnico, on_delete=models.CASCADE) 
     correo = models.CharField(max_length=50, default="")
+    fotos = models.ImageField(upload_to='fotos', null=True, blank=True)
 
 
     def __str__(self):
         return self.titulo
     
+class PDFGenerado(models.Model):
+    name = models.CharField(max_length=150)
+    # Modelo para almacenar los PDF generados
+    archivo = models.FileField(upload_to='pdfs/')
+
+
+    
+

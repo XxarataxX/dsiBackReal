@@ -99,6 +99,8 @@ class TareaUpdateView(generics.UpdateAPIView):
     def put(self, request, *args, **kwargs):
         tarea = self.get_object()
 
+        
+        
         image_fields = ['image_1', 'image_2', 'image_3']
         for field_name in image_fields:
             image_base64 = request.data.get(f'{field_name}_base64')
@@ -113,17 +115,25 @@ class TareaUpdateView(generics.UpdateAPIView):
 
         firma_base64 = request.data.get('firma_base64')
         firma_base64 = firma_base64 + "=="
-        print(firma_base64)
         if firma_base64:
             try:
                 # Decodifica la firma base64
                 firma_data = base64.b64decode(firma_base64)
 
                 # Guarda la firma en formato SVG directamente
-                tarea.firma = ContentFile(firma_data, 'firma.svg')
+                tarea.firma = ContentFile(firma_data, 'firma.png')
             except Exception as e:
                 print(e)
                 return Response({'error': 'Error al procesar la firma base64.'}, status=status.HTTP_400_BAD_REQUEST)
+            
+        foto = request.data.get('foto')
+        if foto:
+            resized_foto = self.resize_image(foto)
+            if resized_foto:
+                 setattr(tarea, 'fotos', resized_foto)
+            else:
+                return Response({'error': 'Error al procesar la imagen base64.'}, status=status.HTTP_400_BAD_REQUEST)
+            
 
         correo = request.data.get('correo')
         cliente = request.data.get('cliente')
