@@ -109,7 +109,8 @@ def generar_pdf(numero, tarea):
 def generar_pdf_al_modificar(sender, instance, **kwargs):
     # Aquí llama a tu función para generar el PDF
     
-    generar_pdf(instance.pk, instance)
+    # generar_pdf(instance.pk, instance)
+    pass
 
 
   
