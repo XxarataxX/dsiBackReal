@@ -20,9 +20,20 @@ from .models import Tarea
 class ConditionListApiView(generics.ListAPIView):
 
     serializer_class = MiModeloSerializer
-
     def get_queryset(self):
-        return Tarea.objects.all()
+        status = self.kwargs['status']
+        tecnico = self.kwargs['tecnico']
+        
+        queryset = Tarea.objects.filter(status=status, tecnico=tecnico)
+        return queryset
+
+# # Create your views here.
+# class ConditionListApiView(generics.ListAPIView):
+
+#     serializer_class = MiModeloSerializer
+
+#     def get_queryset(self):
+#         return Tarea.objects.all()
     
 class UserListApiView(generics.ListAPIView):
 
@@ -130,7 +141,8 @@ class TareaUpdateView(generics.UpdateAPIView):
             
         tarea.recibio = cliente
         tarea.correo = correo
-        
+        tarea.status = 2
+
         tarea.save()
         serializer = self.get_serializer(tarea)
         return Response(serializer.data, status=status.HTTP_200_OK)

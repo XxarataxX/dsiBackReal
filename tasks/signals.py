@@ -11,26 +11,33 @@ from io import BytesIO
 
 from django.core.files.base import ContentFile
 
-def generar_pdf(numero):
+def generar_pdf(instance):
+
+    try:
+        # Intenta obtener un registro existente con la misma tarea
+        factura = PDFGenerado.objects.get(tarea=instance)
+    except PDFGenerado.DoesNotExist:
+        # Si no existe, crea uno nuevo
+        factura = PDFGenerado(tarea=instance)
+
      # Genera el PDF utilizando ReportLab
     buffer = BytesIO()
     p = canvas.Canvas(buffer, pagesize=letter)
-    
-    p.drawString(100, 750, "Factura Número: {}".format(numero))
-   
+    p.drawString(100, 750, "Factura Número: {}".format(instance))
+    # p.drawString(100, 730, "Fecha: {}".format(fecha))
+    # Puedes agregar más contenido a tu PDF aquí
     p.showPage()
     p.save()
 
-    # Guarda el PDF en el modelo Factura
-    factura = PDFGenerado(name="numero")
-    factura.archivo.save('factura.pdf'.format(numero), ContentFile(buffer.getvalue()))
-
+    # Guarda el PDF en el registro existente o en el nuevo
+    factura.archivo.save('factura.pdf', ContentFile(buffer.getvalue()))
+    factura.save()
 
 @receiver(post_save, sender=Tarea)
 def generar_pdf_al_modificar(sender, instance, **kwargs):
     # Aquí llama a tu función para generar el PDF
     
-    generar_pdf(instance.pk)
+    generar_pdf(instance)
 
 
   
