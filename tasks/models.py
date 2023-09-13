@@ -62,8 +62,13 @@ class Tarea(models.Model):
     image_1 = models.ImageField(upload_to='completos', null=True, blank=True)
     image_2 = models.ImageField(upload_to='completos', null=True, blank=True)
     image_3 = models.ImageField(upload_to='completos', null=True, blank=True)
+    image_4 = models.ImageField(upload_to='completos', null=True, blank=True)
     image_persona = models.ImageField(upload_to='completos', null=True, blank=True)
     tecnico = models.ForeignKey(Tecnico, on_delete=models.CASCADE) 
+    correo = models.CharField(max_length=50, default="")
+    fotos = models.ImageField(upload_to='fotos', null=True, blank=True)
+    notas = models.TextField(default=" ")
+
     correo = models.CharField(max_length=50, default="", null=True, blank=True)
     estatus_pago = models.IntegerField(choices=opciones_pagado, default=1)
     estatus_Factura = models.IntegerField(choices=opciones_factura, default=1)
@@ -75,11 +80,15 @@ class Tarea(models.Model):
     def save(self, *args, **kwargs):
        # Lógica para crear o modificar un registro en Historial_pagos
 
-        print(f'Se ha creado o modificado una tarea: {self.pk}')
+        is_new = not self.pk
+        super(Tarea, self).save(*args, **kwargs)
+        if not is_new:
+            print(f'Se ha creado o modificado una tarea: {self.pk}')
         # Por ejemplo:
-        tarea_existente = Tarea.objects.get(pk=self.pk)
-        historial_pago = Historial_pagos.objects.create(tarea=tarea_existente, pago_porcentaje=self.porcentaje_de_pago)
-        historial_pago.save()
+
+            tarea_existente = Tarea.objects.get(pk=self.pk)
+            historial_pago = Historial_pagos.objects.create(tarea=tarea_existente, pago_porcentaje=self.porcentaje_de_pago)
+            historial_pago.save()
 
     def __str__(self):
         return self.titulo
