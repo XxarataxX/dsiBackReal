@@ -13,6 +13,7 @@ from io import BytesIO
 from django.core.files.base import ContentFile
 
 def generar_pdf(numero, tarea):
+    pdf_existente = PDFGenerado.objects.filter(tarea=tarea).first()
     # Genera el PDF utilizando ReportLab
     buffer = BytesIO()
     p = canvas.Canvas(buffer, pagesize=letter)
@@ -101,15 +102,27 @@ def generar_pdf(numero, tarea):
     p.save()
 
     # Guarda el PDF en el modelo Factura
-    factura = PDFGenerado(name=f"factura_{numero}.pdf")
-    factura.archivo.save(factura.name, ContentFile(buffer.getvalue()))
+    # factura = PDFGenerado(name=f"factura_{numero}.pdf")
+    # # factura.archivo.save(factura.name, ContentFile(buffer.getvalue()))
+    # factura.archivo.save(factura.name, tarea=tarea)
+    if pdf_existente:
+        # Sobrescribe el archivo del PDF existente con el nuevo contenido
+        pdf_existente.archivo.delete()  # Elimina el archivo existente
+        pdf_existente.archivo.save(f"factura_{numero}.pdf", ContentFile(buffer.getvalue()))
+        pdf_existente.save()  # Guarda la instancia de PDFGenerado actualizada
+    else:
+        # Crea una nueva instancia de PDFGenerado si no existe una para la tarea
+        factura = PDFGenerado(name=f"factura_{numero}.pdf", tarea=tarea)
+        factura.archivo.save(factura.name, ContentFile(buffer.getvalue()))
+        factura.save()  # Guarda la instancia de PDFGenerado en la base de datos
 
 
 @receiver(post_save, sender=Tarea)
-def generar_pdf_al_modificar(sender, instance, **kwargs):
-    # Aquí llama a tu función para generar el PDF
-    
-    # generar_pdf(instance.pk, instance)
+def generar_pdf_al_modificar(sender, instance, created, **kwargs):
+    # Check if the instance already exists (update)
+    if not created:
+        # Call your function to generate the PDF
+        generar_pdf(instance.pk, instance)
     pass
 
 

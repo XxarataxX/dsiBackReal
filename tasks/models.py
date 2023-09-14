@@ -69,14 +69,12 @@ class Tarea(models.Model):
     fotos = models.ImageField(upload_to='fotos', null=True, blank=True)
     notas = models.TextField(default=" ")
 
-    correo = models.CharField(max_length=50, default="", null=True, blank=True)
     estatus_pago = models.IntegerField(choices=opciones_pagado, default=1)
     estatus_Factura = models.IntegerField(choices=opciones_factura, default=1)
     no_Factura = models.CharField(max_length=50, default="", null=True, blank=True)
     no_Factura_nota = models.CharField(max_length=50, default="", null=True, blank=True)
 
     porcentaje_de_pago= models.IntegerField(null=True, blank=True)
-    notas_tecnico = models.TextField(null=True, blank=True)
     def save(self, *args, **kwargs):
        # Lógica para crear o modificar un registro en Historial_pagos
 
@@ -89,6 +87,8 @@ class Tarea(models.Model):
             tarea_existente = Tarea.objects.get(pk=self.pk)
             historial_pago = Historial_pagos.objects.create(tarea=tarea_existente, pago_porcentaje=self.porcentaje_de_pago)
             historial_pago.save()
+
+        
 
     def __str__(self):
         return self.titulo
