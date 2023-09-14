@@ -4,7 +4,7 @@ from rest_framework.parsers import FileUploadParser, MultiPartParser
 from rest_framework.response import Response
 from rest_framework import status
 from .serializer import MiModeloSerializer, UserSerializer
-from .models import Tarea, Tecnico
+from .models import Tarea, Tecnico, PDFGenerado
 from django.shortcuts import get_object_or_404
 
 
@@ -110,9 +110,15 @@ class TareaUpdateView(generics.UpdateAPIView):
     def put(self, request, *args, **kwargs):
         tarea = self.get_object()
 
+        image_fields2 = ['image_1', 'image_2', 'image_3', 'image_4']
+        image_fields = []
+
+        for field_name in image_fields2:
+            if request.data.get(f'{field_name}_base64'):
+                image_fields.append(f'{field_name}')
         
         
-        image_fields = ['image_1', 'image_2', 'image_3', 'image_4']
+        
         for field_name in image_fields:
             image_base64 = request.data.get(f'{field_name}_base64')
             image_base64 = image_base64 + "=="
@@ -122,6 +128,7 @@ class TareaUpdateView(generics.UpdateAPIView):
                 if resized_image:
                     setattr(tarea, field_name, resized_image)
                 else:
+                    print('pepepe')
                     return Response({'error': 'Error al procesar la imagen base64.'}, status=status.HTTP_400_BAD_REQUEST)
 
         firma_base64 = request.data.get('firma_base64')
@@ -144,6 +151,7 @@ class TareaUpdateView(generics.UpdateAPIView):
             if resized_foto:
                  setattr(tarea, 'fotos', resized_foto)
             else:
+                print('pepepe')
                 return Response({'error': 'Error al procesar la imagen base64.'}, status=status.HTTP_400_BAD_REQUEST)
             
 
