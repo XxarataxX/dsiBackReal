@@ -17,7 +17,7 @@ urlpatterns = [
     path(
         'update/<int:pk>/',
         views.TareaUpdateView.as_view()
-    ),
+    ), 
 
     path(
         'usuario/',

@@ -10,6 +10,10 @@ from reportlab.pdfgen import canvas
 from io import BytesIO
 
 
+from django.conf import settings
+from django.core.mail import send_mail, EmailMessage
+
+
 from django.core.files.base import ContentFile
 
 def generar_pdf(numero, tarea):
@@ -110,18 +114,53 @@ def generar_pdf(numero, tarea):
         pdf_existente.archivo.delete()  # Elimina el archivo existente
         pdf_existente.archivo.save(f"factura_{numero}.pdf", ContentFile(buffer.getvalue()))
         pdf_existente.save()  # Guarda la instancia de PDFGenerado actualizada
+
+
+        subject = 'Prueba de envío de PDF'
+        message = 'Este es un correo con un archivo PDF adjunto.'
+        from_email = settings.EMAIL_HOST_USER
+        recipient_list = ['arata.sama.fake@gmail.com']
+
+        email = EmailMessage(subject, message, from_email, recipient_list)
+
+        # Adjunta el archivo PDF al correo
+        pdf_path = pdf_existente.archivo.path  # Ruta al archivo PDF
+        pdf_filename = pdf_existente.archivo.name  # Nombre del archivo PDF
+        email.attach_file(pdf_path, pdf_filename)  # Adjunta el archivo PDF al correo
+
+        # Envía el correo electrónico
+        email.send()
+
+
     else:
         # Crea una nueva instancia de PDFGenerado si no existe una para la tarea
         factura = PDFGenerado(name=f"factura_{numero}.pdf", tarea=tarea)
         factura.archivo.save(factura.name, ContentFile(buffer.getvalue()))
         factura.save()  # Guarda la instancia de PDFGenerado en la base de datos
 
+        ruta_archivo_pdf = factura.archivo.path
+
+        subject = 'Prueba de envío de PDF'
+        message = 'Este es un correo con un archivo PDF adjunto.'
+        from_email = settings.EMAIL_HOST_USER
+        recipient_list = ['arata.sama.fake@gmail.com']
+        email = EmailMessage(subject, message, from_email, recipient_list)
+
+        # Adjuntar el archivo PDF al correo
+        with open(ruta_archivo_pdf, 'rb') as pdf_file:
+            email.attach(factura.name, pdf_file.read(), 'application/pdf')
+
+
+        email.send()
+
 
 @receiver(post_save, sender=Tarea)
 def generar_pdf_al_modificar(sender, instance, created, **kwargs):
+    
+
     # Check if the instance already exists (update)
     if not created:
-        # Call your function to generate the PDF
+
         generar_pdf(instance.pk, instance)
     pass
 
