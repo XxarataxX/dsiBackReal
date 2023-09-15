@@ -26,7 +26,7 @@ def generar_pdf(numero, tarea):
     
     
 
-    p.drawString(400, 760, f"Numero: {tarea.fecha_creacion}")
+    p.drawString(400, 760, f"Numero: {tarea.pk}")
     p.drawString(400, 745, f"Estatus: {dict(tarea.opciones)[tarea.status]}")
 
     
@@ -39,24 +39,27 @@ def generar_pdf(numero, tarea):
     # p.setFont("Helvetica-Bold", 18)
     
     # Agrega la información de la tarea
-    p.drawString(50, 710, f"Cliente: {tarea.cliente}")
+    p.drawString(50, 680, f"{tarea.cliente}")
 
     # p.setFont("Helvetica", tamaño_fuente_predeterminado)
 
     # p.drawString(75, 690, f"{tarea.description}")
     
     # p.drawString(450, 715, f"Status: {dict(tarea.opciones)[tarea.status]}")
-    p.drawString(50, 370, f"Recibió: {tarea.recibio}")
+    p.drawString(50, 340, f"{tarea.recibio}")
     
-    p.drawString(50, 100, f"Técnico: {tarea.tecnico.username}")
+    p.drawString(50, 70, f"{tarea.tecnico.username}")
 
-    p.drawString(50, 635, f"{tarea.notas}")
+    p.drawString(50, 625, f"{tarea.notas}")
 
     p.setFont("Helvetica-Bold", 18)
 
-    p.drawString(50, 660, f"Servicio:")
-    p.drawString(50, 295, f"Firma:")
-    p.drawString(50, 590, f"Fotos:")
+    p.drawString(50, 650, f"Servicio:")
+    p.drawString(50, 285, f"Firma:")
+    p.drawString(50, 580, f"Fotos:")
+    p.drawString(50, 700, f"Cliente:")
+    p.drawString(50, 360, f"Recibió:")
+    p.drawString(50, 90, f"Técnico:")
 
 
 
@@ -70,9 +73,9 @@ def generar_pdf(numero, tarea):
 
         p.setStrokeColor(colors.black)
         p.setLineWidth(1)
-        p.rect(120, 195, 150, 75)
+        p.rect(120, 185, 150, 75)
 
-        p.drawImage(image3_path, 120, 195, width=150, height=75, mask='auto')
+        p.drawImage(image3_path, 120, 185, width=150, height=75, mask='auto')
     
     # Si hay una firma, la agrega al PDF
     # if tarea.firma:
@@ -82,23 +85,23 @@ def generar_pdf(numero, tarea):
     # Si hay imágenes adicionales, agrégalas al PDF
     if tarea.image_1:
         image1_path = tarea.image_1.path
-        p.drawImage(image1_path, 120, 495, width=150, height=75)
+        p.drawImage(image1_path, 120, 485, width=150, height=75)
 
     if tarea.image_2:
         image2_path = tarea.image_2.path
-        p.drawImage(image2_path, 345, 495, width=150, height=75)
+        p.drawImage(image2_path, 345, 485, width=150, height=75)
 
     if tarea.image_3:
         image3_path = tarea.image_3.path
-        p.drawImage(image3_path, 120, 410, width=150, height=75)
+        p.drawImage(image3_path, 120, 400, width=150, height=75)
 
     if tarea.image_4:
         image3_path = tarea.image_4.path
-        p.drawImage(image3_path, 345, 410, width=150, height=75)
+        p.drawImage(image3_path, 345, 400, width=150, height=75)
 
     if tarea.fotos:
         image3_path = tarea.fotos.path
-        p.drawImage(image3_path, 345, 195, width=150, height=75)
+        p.drawImage(image3_path, 345, 185, width=150, height=75)
 
     
 
