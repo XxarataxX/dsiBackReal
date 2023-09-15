@@ -54,6 +54,7 @@ class Tarea(models.Model):
 
     titulo = models.CharField(max_length=50)
     description = models.CharField(max_length=150)
+    cliente = models.CharField(max_length=150)
     fecha_creacion = models.DateField(default=date.today)
     fecha_vencimiento = models.DateField()
     status = models.IntegerField(choices=opciones, default= 1)
@@ -65,9 +66,9 @@ class Tarea(models.Model):
     image_4 = models.ImageField(upload_to='completos', null=True, blank=True)
     image_persona = models.ImageField(upload_to='completos', null=True, blank=True)
     tecnico = models.ForeignKey(Tecnico, on_delete=models.CASCADE) 
-    correo = models.CharField(max_length=50, default="")
+    correo = models.CharField(max_length=50,  null=True, blank=True)
     fotos = models.ImageField(upload_to='fotos', null=True, blank=True)
-    notas = models.TextField(default=" ")
+    notas = models.TextField(null=True, blank=True)
 
     estatus_pago = models.IntegerField(choices=opciones_pagado, default=1)
     estatus_Factura = models.IntegerField(choices=opciones_factura, default=1)
