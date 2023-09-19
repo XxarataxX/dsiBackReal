@@ -25,6 +25,12 @@ urlpatterns = [
     ),
 
     path(
+        'tareas_estatus/',
+        views.ListTareas.as_view()
+    ),
+
+    
+    path(
     'usuario_login/<str:clave>/<str:correo>/',
     views.VisitorDetailCorreoClave.as_view()
     ),

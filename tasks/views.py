@@ -35,6 +35,13 @@ class ConditionListApiView(generics.ListAPIView):
 #     def get_queryset(self):
 #         return Tarea.objects.all()
     
+class ListTareas(generics.ListAPIView):
+
+    serializer_class = TareaSerializer
+
+    def get_queryset(self):
+        return Tarea.objects.all()
+    
 class UserListApiView(generics.ListAPIView):
 
     serializer_class = UserSerializer
